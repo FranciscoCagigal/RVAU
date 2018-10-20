@@ -32,9 +32,6 @@ public class BallMovement : MonoBehaviour {
             this.velocity = this.velocity.normalized * speed;
             transform.localPosition += this.velocity;
         }
-        //transform.position += this.velocity;
-        //transform.position = new Vector3(transform.position.x,0.05f, transform.position.z);
-        //transform.position.y = 1;
     }
 
     private void OnCollisionEnter(Collision collision)
@@ -58,6 +55,9 @@ public class BallMovement : MonoBehaviour {
                 this.velocity.z *= -1f;
                 return;
             case "Paddle2":
+                this.velocity.z *= -1f;
+                return;
+            case "CPUPaddle":
                 this.velocity.z *= -1f;
                 return;
         }
