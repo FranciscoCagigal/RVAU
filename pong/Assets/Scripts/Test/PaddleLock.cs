@@ -11,6 +11,7 @@ public class PaddleLock : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-        transform.position = new Vector3(transform.position.x,0.5f, transform.position.z);
+        transform.localPosition = new Vector3(transform.localPosition.x,0.5f, transform.localPosition.z);
+        transform.position = new Vector3(transform.position.x, 0.5f, transform.position.z);
     }
 }

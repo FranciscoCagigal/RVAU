@@ -8,6 +8,7 @@ public class BallMovement : MonoBehaviour {
     Vector3 velocity;
     [Range(0,1)]
     public float speed = 0.1f;
+    private bool state = false;
 
 	// Use this for initialization
 	void Start () {
@@ -26,13 +27,14 @@ public class BallMovement : MonoBehaviour {
 	
 	// Update is called once per frame
 	void FixedUpdate () {
-        this.velocity = this.velocity.normalized * speed;
-        Debug.Log("inicio: " + transform.position);
-        transform.localPosition += this.velocity;
+        if (state)
+        {
+            this.velocity = this.velocity.normalized * speed;
+            transform.localPosition += this.velocity;
+        }
         //transform.position += this.velocity;
         //transform.position = new Vector3(transform.position.x,0.05f, transform.position.z);
         //transform.position.y = 1;
-        Debug.Log("fim: " + transform.position);
     }
 
     private void OnCollisionEnter(Collision collision)
@@ -59,6 +61,11 @@ public class BallMovement : MonoBehaviour {
                 this.velocity.z *= -1f;
                 return;
         }
+    }
+
+    public void changeState(bool state)
+    {
+        this.state = state;
     }
 }
 
