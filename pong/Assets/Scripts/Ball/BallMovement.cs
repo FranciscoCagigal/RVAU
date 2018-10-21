@@ -52,12 +52,17 @@ public class BallMovement : MonoBehaviour {
                 StartNewBall();
                 return;
             case "Paddle1":
-                this.velocity.z *= -1f;
+                Debug.Log("colision " + collision.contacts[0].normal);
+                //this.velocity.z *= -1f;
+                this.velocity = Reflect(this.velocity, collision.contacts[0].normal);
+                this.velocity.y = 0;
                 return;
             case "Paddle2":
                 this.velocity.z *= -1f;
+
                 return;
             case "CPUPaddle":
+                Debug.Log("colision " + collision.contacts[0].normal);
                 this.velocity.z *= -1f;
                 return;
         }
@@ -66,6 +71,11 @@ public class BallMovement : MonoBehaviour {
     public void changeState(bool state)
     {
         this.state = state;
+    }
+
+    public static Vector3 Reflect(Vector3 vector, Vector3 normal)
+    {
+        return vector - 2 * Vector3.Dot(vector, normal) * normal;
     }
 }
 
