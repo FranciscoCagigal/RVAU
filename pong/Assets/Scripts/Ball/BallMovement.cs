@@ -52,17 +52,14 @@ public class BallMovement : MonoBehaviour {
                 StartNewBall();
                 return;
             case "Paddle1":
-                Debug.Log("colision " + collision.contacts[0].normal);
-                //this.velocity.z *= -1f;
                 this.velocity = Reflect(this.velocity, collision.contacts[0].normal);
                 this.velocity.y = 0;
                 return;
             case "Paddle2":
-                this.velocity.z *= -1f;
-
+                this.velocity = Reflect(this.velocity, collision.contacts[0].normal);
+                this.velocity.y = 0;
                 return;
             case "CPUPaddle":
-                Debug.Log("colision " + collision.contacts[0].normal);
                 this.velocity.z *= -1f;
                 return;
         }
