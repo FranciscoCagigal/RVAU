@@ -1,18 +1,27 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 [RequireComponent(typeof(Rigidbody))]
 public class BallMovement : MonoBehaviour {
+
+    public GameManager gameManager;
 
     Vector3 velocity;
     [Range(0,1)]
     public float speed = 0.1f;
     private bool state = false;
 
+    private string lastColision;
+
+    public Animation anim;
+    public Text scoreText;
+
 	// Use this for initialization
 	void Start () {
         StartNewBall();
+        scoreText.enabled = false;
     }
 
     void StartNewBall()
@@ -34,6 +43,13 @@ public class BallMovement : MonoBehaviour {
         }
     }
 
+    public void animationCallback()
+    {
+        scoreText.enabled = false;
+        gameManager.InscrementScore(lastColision);
+        StartNewBall(); 
+    }
+
     private void OnCollisionEnter(Collision collision)
     {
         Debug.Log(collision.transform.name);
@@ -46,10 +62,17 @@ public class BallMovement : MonoBehaviour {
                 this.velocity.x *= -1f;
                 return;
             case "Bounds North":
-                StartNewBall();
+                if (ApplicationModel.gameType == "cpuVSplayer")
+                    scoreText.text = "CPU scores!!!";
+                else if (ApplicationModel.gameType == "playerVSplayer")
+                    scoreText.text = "Player 2 scores!!!";
+                scoreText.GetComponent<Animator>().SetTrigger("ScoreAnimation");
+                lastColision = collision.transform.name;
                 return;
             case "Bounds South":
-                StartNewBall();
+                scoreText.text = "Player 1 scores!!!";
+                scoreText.GetComponent<Animator>().SetTrigger("ScoreAnimation");
+                lastColision = collision.transform.name;
                 return;
             case "Paddle1":
                 this.velocity = Reflect(this.velocity, collision.contacts[0].normal);
@@ -74,5 +97,6 @@ public class BallMovement : MonoBehaviour {
     {
         return vector - 2 * Vector3.Dot(vector, normal) * normal;
     }
+
 }
 
