@@ -29,7 +29,7 @@ public class GameManager : MonoBehaviour {
 
         }
 
-        if (player1Score == 3 || player2Score == 3)
+        if (player1Score == ApplicationModel.goals || player2Score == ApplicationModel.goals)
         {
             gameOver();
             return false;
@@ -39,8 +39,7 @@ public class GameManager : MonoBehaviour {
     }
 
     private void gameOver()
-    {
-        Debug.Log("GAME OVER");   
+    { 
         int winner; //1 if player 1 wins, 0 if player 2 wins
 
         if (player1Score > player2Score)
