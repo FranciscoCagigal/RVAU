@@ -43,11 +43,13 @@ public class BallMovement : MonoBehaviour {
         }
     }
 
+
     //depois de animação de ponto terminar, começa um novo jogo chamando esta função
     public void animationCallback()
     {
         scoreText.enabled = false;
-        gameManager.InscrementScore(lastColision.transform.name); //incrementa o score no UI
+        if (!gameManager.InscrementScore(lastColision.transform.name))//incrementa o score no UI
+            return;
         Physics.IgnoreCollision(lastColision.gameObject.GetComponent<Collider>(), GetComponent<Collider>(), false); //"designorar" a colisão pra sabermos quando volta a haver ponto
         StartNewBall(); //posiciona a bola e começa um novo jogo
     }
