@@ -4,6 +4,8 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
+
+
 public class MenuListener : MonoBehaviour {
 
     List<string> modes = new List<string>() {"Normal","Switcheroo","Rotation"};
@@ -22,5 +24,10 @@ public class MenuListener : MonoBehaviour {
 
     public void changeGameMode(int index) {
         ApplicationModel.gameMode = modes[index];
+    }
+
+    public void changeAIDifficulty(float value)
+    {
+        ApplicationModel.AIdificulty = value;
     }
 }

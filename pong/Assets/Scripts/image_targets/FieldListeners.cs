@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Vuforia;
 
-public class Listeners : MonoBehaviour, ITrackableEventHandler
+public class FieldListeners : MonoBehaviour, ITrackableEventHandler
 {
     private TrackableBehaviour mTrackableBehaviour;
     private BallMovement _ballScript;

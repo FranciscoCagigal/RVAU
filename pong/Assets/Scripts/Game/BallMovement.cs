@@ -13,15 +13,15 @@ public class BallMovement : MonoBehaviour {
     public float speed = 0.1f;
     private bool state = false;
 
-    private string lastColision;
+    private Collision lastColision;
 
-    public Animation anim;
     public Text scoreText;
+    public GameObject paddle1, paddle2;
 
 	// Use this for initialization
 	void Start () {
-        StartNewBall();
         scoreText.enabled = false;
+        StartNewBall();  
     }
 
     void StartNewBall()
@@ -43,46 +43,50 @@ public class BallMovement : MonoBehaviour {
         }
     }
 
+    //depois de animação de ponto terminar, começa um novo jogo chamando esta função
     public void animationCallback()
     {
         scoreText.enabled = false;
-        gameManager.InscrementScore(lastColision);
-        StartNewBall(); 
+        gameManager.InscrementScore(lastColision.transform.name); //incrementa o score no UI
+        Physics.IgnoreCollision(lastColision.gameObject.GetComponent<Collider>(), GetComponent<Collider>(), false); //"designorar" a colisão pra sabermos quando volta a haver ponto
+        StartNewBall(); //posiciona a bola e começa um novo jogo
     }
 
     private void OnCollisionEnter(Collision collision)
     {
-        Debug.Log(collision.transform.name);
+        Debug.Log(collision.gameObject.name);
         switch (collision.transform.name)
         {
-            case "Bounds Right":
+            case "Bounds Right": //contactos laterais
                 this.velocity.x *= -1f;
                 return;
-            case "Bounds Left":
+            case "Bounds Left": //contactos laterais
                 this.velocity.x *= -1f;
                 return;
-            case "Bounds North":
+            case "Bounds North": //CPU ou player 2 marcou - depende do tipo de jogo
                 if (ApplicationModel.gameType == "cpuVSplayer")
                     scoreText.text = "CPU scores!!!";
                 else if (ApplicationModel.gameType == "playerVSplayer")
                     scoreText.text = "Player 2 scores!!!";
-                scoreText.GetComponent<Animator>().SetTrigger("ScoreAnimation");
-                lastColision = collision.transform.name;
+                scoreText.GetComponent<Animator>().SetTrigger("ScoreAnimation"); //trigger animacao
+                Physics.IgnoreCollision(collision.gameObject.GetComponent<Collider>(), GetComponent<Collider>()); //ignorar a colisao com a barreira para q a bola continue o caminho - sugestao do professor
+                lastColision = collision;
                 return;
-            case "Bounds South":
+            case "Bounds South":  //Player1 marcou
                 scoreText.text = "Player 1 scores!!!";
                 scoreText.GetComponent<Animator>().SetTrigger("ScoreAnimation");
-                lastColision = collision.transform.name;
+                Physics.IgnoreCollision(collision.gameObject.GetComponent<Collider>(), GetComponent<Collider>()); //ignorar a colisao com a barreira para q a bola continue o caminho - sugestao do professor
+                lastColision = collision;
                 return;
-            case "Paddle1":
-                this.velocity = Reflect(this.velocity, collision.contacts[0].normal);
+            case "Paddle1": //contacto entre paddle do jogador e bola
+                this.velocity = Reflect(this.velocity, collision.contacts[0].normal); //aqui esta o bug
                 this.velocity.y = 0;
                 return;
-            case "Paddle2":
-                this.velocity = Reflect(this.velocity, collision.contacts[0].normal);
+            case "Paddle2": //contacto entre paddle do jogador e bola
+                this.velocity = Reflect(this.velocity, collision.contacts[0].normal); //aqui esta o bug
                 this.velocity.y = 0;
                 return;
-            case "CPUPaddle":
+            case "CPUPaddle": //contacto entre paddle do cpu e bola
                 this.velocity.z *= -1f;
                 return;
         }
@@ -96,6 +100,44 @@ public class BallMovement : MonoBehaviour {
     public static Vector3 Reflect(Vector3 vector, Vector3 normal)
     {
         return vector - 2 * Vector3.Dot(vector, normal) * normal;
+    }
+
+    public void switcheroo()
+    {
+        var rendererComponents = gameObject.transform.parent.gameObject.GetComponentsInChildren<Renderer>(true);
+        paddle2.transform.localPosition = new Vector3(paddle2.transform.localPosition.x, paddle2.transform.localPosition.y, paddle2.transform.localPosition.z * -1);
+        paddle1.transform.localPosition = new Vector3(paddle1.transform.localPosition.x, paddle1.transform.localPosition.y, paddle1.transform.localPosition.z * -1);
+        foreach (var component in rendererComponents)
+        {
+            if(component.name == "Bounds North" || component.name == "Bounds South")
+            {
+                component.transform.localPosition = new Vector3(component.transform.localPosition.x, component.transform.localPosition.y, component.transform.localPosition.z * -1);
+            }
+        }
+    }
+
+    public void rotatePaddle(int paddle)
+    {
+        GameObject paddleObj = null;
+
+        if(paddle == 1)
+        {
+            paddleObj = paddle2;
+        }
+        else if(paddle == 2)
+        {
+            paddleObj = paddle1;
+        }
+
+        paddleObj.transform.Rotate(new Vector3(0, 90, 0));
+
+        StartCoroutine(restorePaddle(paddleObj, 2));
+    }
+
+    private IEnumerator restorePaddle(GameObject paddle,int delayTime)
+    {
+        yield return new WaitForSeconds(delayTime);
+        paddle.transform.Rotate(new Vector3(0, -90, 0));
     }
 
 }

@@ -8,8 +8,13 @@ public class Controller : MonoBehaviour {
 
     [Range(0, 1)]
     public float difficulty=0.5f;
-	// Update is called once per frame
-	void Update () {
+
+    private void Start()
+    {
+        difficulty = ApplicationModel.AIdificulty;
+    }
+    // Update is called once per frame
+    void Update () {
 
         Vector3 newPos = transform.localPosition;
         newPos.x = Mathf.Lerp(transform.localPosition.x,ball.localPosition.x, difficulty);
