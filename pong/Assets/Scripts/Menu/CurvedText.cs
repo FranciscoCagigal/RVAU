@@ -11,18 +11,24 @@ public class CurvedText : MonoBehaviour
     public float AngleMultiplier = 1.0f;
     public float SpeedMultiplier = 1.0f;
     public float CurveScale = 1.0f;
+    public bool firstRun = true;
 
     void Awake()
     {
         m_TextComponent = gameObject.GetComponent<TMP_Text>();
     }
 
-
-    void Start()
+    private void OnEnable()
     {
         StartCoroutine(WarpText());
     }
 
+
+    Mesh mesh;
+    Vector3[] vertices;
+    Matrix4x4 matrix;
+    float old_CurveScale;
+    AnimationCurve old_curve;
 
     private AnimationCurve CopyAnimationCurve(AnimationCurve curve)
     {
@@ -41,18 +47,19 @@ public class CurvedText : MonoBehaviour
     /// <returns></returns>
     IEnumerator WarpText()
     {
-        VertexCurve.preWrapMode = WrapMode.Clamp;
-        VertexCurve.postWrapMode = WrapMode.Clamp;
-
-        //Mesh mesh = m_TextComponent.textInfo.meshInfo[0].mesh;
-
-        Vector3[] vertices;
-        Matrix4x4 matrix;
-
         m_TextComponent.havePropertiesChanged = true; // Need to force the TextMeshPro Object to be updated.
-        CurveScale *= 10;
-        float old_CurveScale = CurveScale;
-        AnimationCurve old_curve = CopyAnimationCurve(VertexCurve);
+        if (firstRun)
+        {
+            firstRun = false;
+            VertexCurve.preWrapMode = WrapMode.Clamp;
+            VertexCurve.postWrapMode = WrapMode.Clamp;
+
+            //mesh = m_TextComponent.textInfo.meshInfo[0].mesh;
+             
+            CurveScale *= 10;
+            old_CurveScale = CurveScale;
+            old_curve = CopyAnimationCurve(VertexCurve);
+        }
 
         while (true)
         {
