@@ -109,6 +109,7 @@ public class GameManager : MonoBehaviour {
 
     public void backToMenu()
     {
+        Debug.Log("carreguei pra continuar");
         SceneManager.LoadScene("Menu");
     }
 

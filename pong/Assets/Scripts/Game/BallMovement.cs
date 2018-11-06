@@ -43,7 +43,9 @@ public class BallMovement : MonoBehaviour {
         {
             this.velocity = this.velocity.normalized * speed;
             transform.localPosition += this.velocity;
-            testCounter++;
+            Vector3 localPos = transform.localPosition;
+            localPos.y = 0;
+            transform.localPosition = localPos;
         }
     }
 
@@ -84,35 +86,7 @@ public class BallMovement : MonoBehaviour {
                 lastColision = collision;
                 return;
             case "Paddle1": //contacto entre paddle do jogador e bola
-                var point = collision.contacts[0].point;
-                var dir = -collision.contacts[0].normal;
-                point -= dir;
-                RaycastHit hitInfo;
-                var normal = new Vector3();
-                if (collision.collider.Raycast(new Ray(point, dir), out hitInfo, 2))
-                {
-                    normal = hitInfo.normal;
-                    normal = hitInfo.transform.InverseTransformDirection(hitInfo.normal);
-                    Debug.Log("NORMAL " + normal);
-                    var angle = Vector3.Angle(-transform.forward, normal);
-                }
-                this.velocity = Reflect(this.velocity.normalized, normal) * speed; 
-                this.velocity.y = 0;
-                return;
-            case "Paddle2": //contacto entre paddle do jogador e bola
-                point = collision.contacts[0].point;
-                dir = -collision.contacts[0].normal;
-                point -= dir;
-                normal = new Vector3();
-                if (collision.collider.Raycast(new Ray(point, dir), out hitInfo, 2))
-                {
-                    normal = hitInfo.normal;
-                    normal = hitInfo.transform.InverseTransformDirection(hitInfo.normal);
-                    var angle = Vector3.Angle(-transform.forward, normal);
-                }
-                this.velocity = Reflect(this.velocity, normal); //aqui esta o bug
-                this.velocity.y = 0;
-                return;
+            case "Paddle2": //contacto entre paddle do jogador e bola;
             case "CPUPaddle": //contacto entre paddle do cpu e bola
                 this.velocity.z *= -1f;
                 return;
@@ -133,7 +107,11 @@ public class BallMovement : MonoBehaviour {
     {
         var rendererComponents = gameObject.transform.parent.gameObject.GetComponentsInChildren<Renderer>(true);
         paddle2.transform.localPosition = new Vector3(paddle2.transform.localPosition.x, paddle2.transform.localPosition.y, paddle2.transform.localPosition.z * -1);
-        paddle1.transform.localPosition = new Vector3(paddle1.transform.localPosition.x, paddle1.transform.localPosition.y, paddle1.transform.localPosition.z * -1);
+        Debug.Log("LASTPOS " + paddle1.transform.localPosition);
+        if(paddle1.transform.localPosition.z==0)
+            paddle1.transform.localPosition = new Vector3(paddle1.transform.localPosition.x, paddle1.transform.localPosition.y, -2);
+        else paddle1.transform.localPosition = new Vector3(paddle1.transform.localPosition.x, paddle1.transform.localPosition.y, 0);
+        Debug.Log("NEWPOS " + paddle1.transform.localPosition);
         foreach (var component in rendererComponents)
         {
             if(component.name == "Bounds North" || component.name == "Bounds South")

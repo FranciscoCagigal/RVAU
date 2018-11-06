@@ -7,6 +7,7 @@ public class Ability1Listener : MonoBehaviour, ITrackableEventHandler
 {
     private TrackableBehaviour mTrackableBehaviour;
     public BallMovement _ballScript;
+    private int testCounter = 0;
 
     // Use this for initialization
     void Start () {
@@ -19,6 +20,8 @@ public class Ability1Listener : MonoBehaviour, ITrackableEventHandler
 
     public void OnTrackableStateChanged(TrackableBehaviour.Status previousStatus, TrackableBehaviour.Status newStatus)
     {
+        testCounter++;
+        Debug.Log("cheguei aqui - perdi ou ganhei conexao " + ApplicationModel.gameMode + " " + testCounter);
         if (newStatus == TrackableBehaviour.Status.UNDEFINED && previousStatus == TrackableBehaviour.Status.TRACKED)
         {
             switch (ApplicationModel.gameMode)
@@ -42,6 +45,8 @@ public class Ability1Listener : MonoBehaviour, ITrackableEventHandler
 
     private void rotationMethod()
     {
+        Debug.Log(gameObject.name + testCounter);
+
         if (gameObject.name == "Player1AbilityTarget")
             _ballScript.rotatePaddle(1);
         else if (gameObject.name == "Player2AbilityTarget")
