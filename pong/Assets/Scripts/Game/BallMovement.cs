@@ -84,11 +84,33 @@ public class BallMovement : MonoBehaviour {
                 lastColision = collision;
                 return;
             case "Paddle1": //contacto entre paddle do jogador e bola
-                this.velocity = Reflect(this.velocity.normalized, new Vector3(collision.contacts[0].normal.z*-1,0, collision.contacts[0].normal.x)) * speed; //aqui esta o bug
+                var point = collision.contacts[0].point;
+                var dir = -collision.contacts[0].normal;
+                point -= dir;
+                RaycastHit hitInfo;
+                var normal = new Vector3();
+                if (collision.collider.Raycast(new Ray(point, dir), out hitInfo, 2))
+                {
+                    normal = hitInfo.normal;
+                    normal = hitInfo.transform.InverseTransformDirection(hitInfo.normal);
+                    Debug.Log("NORMAL " + normal);
+                    var angle = Vector3.Angle(-transform.forward, normal);
+                }
+                this.velocity = Reflect(this.velocity.normalized, normal) * speed; 
                 this.velocity.y = 0;
                 return;
             case "Paddle2": //contacto entre paddle do jogador e bola
-                this.velocity = Reflect(this.velocity, new Vector3(collision.contacts[0].normal.z * -1, 0, collision.contacts[0].normal.x)); //aqui esta o bug
+                point = collision.contacts[0].point;
+                dir = -collision.contacts[0].normal;
+                point -= dir;
+                normal = new Vector3();
+                if (collision.collider.Raycast(new Ray(point, dir), out hitInfo, 2))
+                {
+                    normal = hitInfo.normal;
+                    normal = hitInfo.transform.InverseTransformDirection(hitInfo.normal);
+                    var angle = Vector3.Angle(-transform.forward, normal);
+                }
+                this.velocity = Reflect(this.velocity, normal); //aqui esta o bug
                 this.velocity.y = 0;
                 return;
             case "CPUPaddle": //contacto entre paddle do cpu e bola
