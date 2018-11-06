@@ -13,11 +13,13 @@ public class GameManager : MonoBehaviour {
     public GameObject gameOverPanel;
 
     public bool InscrementScore(string colliderName) {
+
         switch (colliderName)
         {
             case "Bounds South":
                 player1Score++;
                 txtPlayer1Score.text = "Player 1: " + player1Score;
+                Debug.Log("SCORE " + player1Score);
                 break;
             case "Bounds North":
                 player2Score++;
@@ -70,6 +72,17 @@ public class GameManager : MonoBehaviour {
 
         gameOverPanel.SetActive(true);
 
+        if(ApplicationModel.resumedGame){
+            ApplicationModel.lastGameType = null;
+            ApplicationModel.lastGameMode = null;
+            ApplicationModel.lastAIdificulty = 0;
+            ApplicationModel.lastGoals = 0;
+            ApplicationModel.resumedGame = false;
+            ApplicationModel.score1 = 0;
+            ApplicationModel.score2 = 0;
+        }
+        
+
     }
 
     public int getPlayer1Score()
@@ -82,8 +95,41 @@ public class GameManager : MonoBehaviour {
         return player2Score;
     }
 
+    public void backToMenuWithState()
+    {
+        ApplicationModel.lastGameType = ApplicationModel.gameType;
+        ApplicationModel.lastGameMode = ApplicationModel.gameMode;
+        ApplicationModel.lastAIdificulty = ApplicationModel.AIdificulty;
+        ApplicationModel.lastGoals = ApplicationModel.goals;
+        ApplicationModel.score1 = player1Score;
+        ApplicationModel.score2 = player2Score;
+        ApplicationModel.resumedGame = false;
+        SceneManager.LoadScene("Menu");
+    }
+
     public void backToMenu()
     {
         SceneManager.LoadScene("Menu");
     }
+
+    public void init()
+    {
+        if (ApplicationModel.resumedGame)
+        {
+            ApplicationModel.gameType = ApplicationModel.lastGameType;
+            ApplicationModel.gameMode = ApplicationModel.lastGameMode;
+            ApplicationModel.AIdificulty = ApplicationModel.lastAIdificulty;
+            ApplicationModel.goals = ApplicationModel.lastGoals;
+            
+            player1Score = ApplicationModel.score1;
+            player2Score = ApplicationModel.score2;
+            Debug.Log("SCORE " + player2Score + " " + ApplicationModel.gameType);
+            txtPlayer1Score.text = "Player 1: " + player1Score;
+            if (ApplicationModel.gameType == "cpuVSplayer")
+                txtPlayer2Score.text = "CPU: " + player2Score;
+            else if (ApplicationModel.gameType == "playerVSplayer")
+                txtPlayer2Score.text = "Player 2: " + player2Score;
+        }
+        
+}
 }

@@ -23,6 +23,15 @@ public class MenuListener : MonoBehaviour {
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 2);
     }
 
+    public void resumeGame()
+    {
+        ApplicationModel.resumedGame = true;
+        if(ApplicationModel.lastGameType== "playerVSplayer")
+            SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
+        else if (ApplicationModel.lastGameType == "cpuVSplayer")
+            SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 2);
+    }
+
     public void changeGameMode(int index) {
         ApplicationModel.gameMode = modes[index];
     }

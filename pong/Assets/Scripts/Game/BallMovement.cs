@@ -13,6 +13,8 @@ public class BallMovement : MonoBehaviour {
     public float speed = 0.1f;
     private bool state = false;
 
+    private int testCounter = 0;
+
     private Collision lastColision;
 
     public Text scoreText;
@@ -21,6 +23,7 @@ public class BallMovement : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
         scoreText.enabled = false;
+        gameManager.init();
         StartNewBall();  
     }
 
@@ -40,6 +43,7 @@ public class BallMovement : MonoBehaviour {
         {
             this.velocity = this.velocity.normalized * speed;
             transform.localPosition += this.velocity;
+            testCounter++;
         }
     }
 
@@ -81,11 +85,11 @@ public class BallMovement : MonoBehaviour {
                 lastColision = collision;
                 return;
             case "Paddle1": //contacto entre paddle do jogador e bola
-                this.velocity = Reflect(this.velocity, collision.contacts[0].normal); //aqui esta o bug
+                this.velocity = Reflect(this.velocity.normalized, new Vector3(collision.contacts[0].normal.z*-1,0, collision.contacts[0].normal.x)) * speed; //aqui esta o bug
                 this.velocity.y = 0;
                 return;
             case "Paddle2": //contacto entre paddle do jogador e bola
-                this.velocity = Reflect(this.velocity, collision.contacts[0].normal); //aqui esta o bug
+                this.velocity = Reflect(this.velocity, new Vector3(collision.contacts[0].normal.z * -1, 0, collision.contacts[0].normal.x)); //aqui esta o bug
                 this.velocity.y = 0;
                 return;
             case "CPUPaddle": //contacto entre paddle do cpu e bola
