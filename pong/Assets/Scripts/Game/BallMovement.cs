@@ -60,7 +60,6 @@ public class BallMovement : MonoBehaviour {
 
     private void OnCollisionEnter(Collision collision)
     {
-        Debug.Log(collision.gameObject.name);
         switch (collision.transform.name)
         {
             case "Bounds Right": //contactos laterais

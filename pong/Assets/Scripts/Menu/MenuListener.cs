@@ -55,7 +55,5 @@ public class MenuListener : MonoBehaviour {
         else if(limit<=0)
             ApplicationModel.goals = 1;
         else ApplicationModel.goals = limit;
-
-        Debug.Log(gameObject.name);
     }
 }

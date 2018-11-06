@@ -1,7 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
+
 
 public class ResumeButton : MonoBehaviour {
 
@@ -14,8 +14,6 @@ public class ResumeButton : MonoBehaviour {
 	void Update () {
         if (ApplicationModel.lastGameType == null)
         {
-            Debug.Log("entrei aqui " + ApplicationModel.lastGameType);
-            //gameObject.GetComponent<Button>().enabled=false;
             gameObject.SetActive(false);
         }
         else gameObject.SetActive(true);

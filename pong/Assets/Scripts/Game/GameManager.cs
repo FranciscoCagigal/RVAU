@@ -123,7 +123,6 @@ public class GameManager : MonoBehaviour {
             
             player1Score = ApplicationModel.score1;
             player2Score = ApplicationModel.score2;
-            Debug.Log("SCORE " + player2Score + " " + ApplicationModel.gameType);
             txtPlayer1Score.text = "Player 1: " + player1Score;
             if (ApplicationModel.gameType == "cpuVSplayer")
                 txtPlayer2Score.text = "CPU: " + player2Score;
